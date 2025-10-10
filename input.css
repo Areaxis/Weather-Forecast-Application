@@ -1,0 +1,229 @@
+@import "tailwindcss";
+
+@keyframes goright {
+    0% {
+        opacity: 0;
+        transform: translateX(-15rem);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes godown {
+    0% {
+        opacity: 0;
+        transform: translateY(-5rem);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes goup {
+    0% {
+        opacity: 0;
+        transform: translateY(5rem);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes goleft {
+    0% {
+        opacity: 0;
+        transform: translateX(15rem);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes spin {
+    to { transform: translateX(-50%) rotate(360deg); }
+}
+
+@keyframes moveClouds {
+    0% { transform: translateX(-300px); }
+    100% { transform: translateX(100vw); }
+}
+
+@keyframes rainfall {
+  to {
+    transform: translateY(100vh);
+  }
+}
+
+/* I use themes when I need to add them as a Tailwind class and also to remind myself */
+@theme {
+    --animate-goright: goright 1s ease-in-out forwards;
+    --animate-godown: godown 1s ease-in-out forwards;
+    --animate-goup: goup 1s ease-in-out forwards;
+    --animate-goleft: goleft 1s ease-in-out forwards;
+}
+
+/* Fixes screen overflowing in smaller devices */
+@layer base {
+    body, html {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden; /* prevents horizontal scroll */
+    }
+}
+
+@layer components {
+
+    /* Background transition animation holder when changes */
+    .bg-transition {
+    @apply transition-[background] duration-400 ease-in-out;
+    }
+
+    /* The default background at the starting (my favourite color blue of course) */
+    .bg-default {
+        @apply bg-gradient-to-b from-white to-blue-300
+    }
+
+    /* Rest of the backgrounds according to weather, day and night only applies when there is no other weather */
+    .bg-night {
+        @apply bg-gradient-to-b from-gray-700 to-black
+    }
+
+    .bg-sunny {
+        @apply bg-gradient-to-b from-amber-50 to-amber-400;
+    }
+
+    .bg-cloudy {
+        @apply bg-gradient-to-b from-slate-200 to-slate-500;
+    }
+
+    .bg-rain {
+        @apply bg-gradient-to-b from-blue-100 to-blue-400;
+    }
+
+    .bg-snow {
+        @apply bg-gradient-to-b from-slate-50 to-indigo-300;
+    }
+
+    .bg-storm {
+        @apply bg-gradient-to-b from-rose-50 to-pink-400;
+    }
+
+    .bg-mist {
+        @apply bg-gradient-to-b from-cyan-50 to-emerald-200;
+    }
+
+    /* Inline message boxes */
+    .error-box {
+        @apply bg-white/95 text-red-700 border-l-4 border-red-700 p-2.5 rounded-lg;
+    }
+
+    .info-box {
+        @apply bg-white/85 text-slate-900 p-2 rounded-lg;
+    }
+
+    /* Alert box (inside current card) */
+    #alert-box {
+        @apply bg-red-100 text-red-700 rounded-md px-3 py-2 mt-2;
+    }
+
+    /* Forecast card */
+    .forecast-card {
+        @apply bg-white/5 rounded-xl p-3 text-center text-white shadow-md backdrop-blur-sm;
+    }
+
+    /* Animation layers for background effects */
+    #weather-animation {
+        @apply fixed inset-0 overflow-hidden pointer-events-none z-0;
+    }
+
+    .sunny::before {
+        content: '';
+        position: absolute;
+        top: 15%;
+        left: 50%;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: #facc15; /* yellow-400 */
+        transform: translateX(-50%);
+        box-shadow: 0 0 30px 10px rgba(250, 204, 21, 0.5);
+        animation: spin 20s linear infinite;
+    }
+
+    .night::before {
+        content: '';
+        position: absolute;
+        top: 15%;
+        left: 50%;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: white; /* yellow-400 */
+        transform: translateX(-50%);
+        box-shadow: 0 0 30px 10px rgba(225, 224, 223, 0.5);
+        animation: spin 20s linear infinite;
+    }
+
+    /* Clouds animation */
+    .cloudy::before,
+    .cloudy::after {
+        content: '';
+        position: absolute;
+        top: 25%;
+        background: white;
+        border-radius: 50%;
+        opacity: 0.9;
+        animation: moveClouds 20s linear infinite;
+    }
+
+    .cloudy::before {
+        width: 200px;
+        height: 60px;
+        left: -200px;
+    }
+
+    .cloudy::after {
+        width: 150px;
+        height: 50px;
+        left: 300px;
+        top: 35%;
+    }
+
+    /* Rain animation */
+    #weather-animation.rainy {
+        position: absolute; /* relative to the document, not viewport */
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%; /* will be updated dynamically via JS */
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 0;
+}
+
+    #weather-animation.rainy .drop {
+        position: absolute;
+        top: -10px;
+        width: 2px;
+        height: 15px;
+        background: rgba(255, 255, 255, 0.5);
+        animation: rainfall linear infinite;
+    }
+
+    /* Snow animation */
+    .snowy::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(white 1px, transparent 1px);
+        background-size: 10px 10px;
+        animation: snowFall 3s linear infinite;
+    }
+}
