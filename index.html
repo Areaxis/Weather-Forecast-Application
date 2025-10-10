@@ -1,12 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="output.css">
-    <title>Document</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="icon" href="images/icon.jpg" type="image/jpg">
+  <!-- Icon for the website that appears on the tab -->
+
+  <link rel="stylesheet" href="output.css">
+  <!-- TailwindCSS Support -->
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <!-- Importing fonts for some cool icons  -->
+
+  <title>Weather Forecast App</title>
 </head>
-<body>
+<body class="min-h-screen bg-default bg-transition overflow-x-hidden max-w-full flex flex-col">
+
+  <!-- Header -->
+  <!-- Using Styles instead of bg-[url()] since it is more reliable -->
+  <header class="h-16 fixed top-0 left-0 w-full bg-gradient-to-t from-white to-blue-600 flex flex-col md:flex-row lg:flex-row items-center justify-center border-b border-white shadow-lg z-30 animate-godown">
+    <div style="background-image: url('/images/clouds.png'); opacity: 0.5" class="absolute inset-0"></div>
+    <h1 class="text-3xl md:text-4xl font-extrabold text-white z-10 text-shadow-lg">Weather Forecast App</h1>
+    <i class="text-sm z-10 text-blue-500 text-shadow-none md:pl-2 lg:pl-2">by Khriesezo Peseyie</i>
+  </header>
+
+  <!-- Main Body  -->
+  <div class="flex flex-1 flex-col md:flex-row pt-16">
+  <!-- full height minus header -->
     
+    <!-- Left Sidebars -->
+    <aside class="w-full md:w-1/3 lg:w-1/4 bg-gradient-to-br from-blue-600 to-blue-200 backdrop-blur-md text-white p-6 shadow-xl animate-goright rounded-r-none md:rounded-r-4xl lg:rounded-r-4xl z-20 flex flex-col md:overflow-y-auto">
+      <!-- Search form -->
+      <p class="text-white pb-2">Write your City name here</p>
+      <form id="search-form" class="flex gap-2 mb-4" autocomplete="on">
+        <input id="city-input" name="city" type="text"
+          placeholder="Enter city name"
+          class="flex-1 px-3 py-2 rounded-lg text-black bg-amber-200"
+          aria-label="City name" />
+        <button type="submit" class="px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 hover:scale-120 transform transition-all ease-in-out">
+          Search
+        </button>
+      </form>
+
+      <!-- Location and Unit -->
+      <div class="flex gap-3 mb-4">
+        <button id="geo-btn" class="flex-1 px-3 py-2 bg-amber-500 rounded-lg hover:bg-amber-600">Use current location</button>
+
+        <div class="flex items-center gap-2">
+          <span class="text-sm">Unit:</span>
+          <button id="unit-toggle" class="px-3 py-1 bg-white/20 rounded-lg">°C</button>
+        </div>
+      </div>
+
+      <!-- Recent searches -->
+      <div class="mb-4">
+        <select id="recent-dropdown" class="w-full p-2 rounded-lg bg-white text-black hidden"></select>
+      </div>
+
+      <!-- Message area -->
+      <div id="message-area" class="mb-3" aria-live="polite"></div>
+
+      <!-- Current weather card -->
+      <!-- Latest Weather report appears here -->
+      <div id="current-card" class="hidden mt-3 bg-white/10 p-2 sm:p-4 rounded-xl">
+        <div class="flex items-center gap-2 sm:gap-4">
+          <img id="current-icon" alt="weather icon" class="w-12 h-12 sm:w-20 sm:h-20">
+          <div>
+            <h2 id="current-city" class="text-lg sm:text-xl font-semibold text-black"></h2>
+            <p id="current-desc" class="text-xs sm:text-sm text-black/70 capitalize"></p>
+          </div>
+        </div>
+
+        <div class="mt-2 sm:mt-4 flex items-end justify-between text-xs sm:text-sm">
+          <div>
+            <p id="current-temp" class="text-2xl sm:text-4xl font-bold text-black"></p>
+            <p id="current-feels" class="text-xs sm:text-sm text-black/70"></p>
+          </div>
+          <div class="text-xs sm:text-sm text-black/80">
+            <p><i class="fa-solid fa-cloud-rain text-blue-200"></i> <span class="text-gray-100 font-bold">Humidity</span> <span id="current-humidity"></span>%</p>
+            <p><i class="fa-solid fa-wind text-gray-200"></i> <span class="text-gray-100 font-bold">Wind</span> <span id="current-wind"></span> m/s</p>
+          </div>
+        </div>
+
+        <div id="alert-box" class="mt-2 sm:mt-3 hidden text-xs sm:text-sm rounded-md p-1 sm:p-2"></div>
+      </div>
+
+    </aside>
+
+    <!-- Forecast Page (Right Side)  -->
+    <main class="relative flex-1 bg-transparent rounded-none p-6 text-white overflow-y-auto animate-goleft">
+    <!-- Overflow fixes, scrolls on smaller screens. Scrolling in desktop however is redundant, so it doesn't -->
+      <div id="weather-animation" class="absolute inset-0 pointer-events-none z-0"></div>
+      <div class="flex items-center justify-between mb-4 bg-black/10 relative z-30 p-2 rounded-4xl pl-6 pr-6 text-shadow-lg shadow-xl">
+        <h3 class="md:text-lg lg:text-lg font-semibold">5-Day Forecast</h3>
+        <p class="text-xs md:text-sm lg:text-sm text-white/80">Daily summary and average</p>
+      </div>
+
+      <div id="forecast-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+        <!-- Forecast cards will appear here  -->
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Footer for credits -->
+  <footer class="w-full text-center py-4 text-white relative z-20 bg-blue-500 animate-goup h-16 mt-auto shadow-inner">
+    © 2025 Khriesezo Peseyie, Internshala Trainings
+  </footer>
+
+  <script src="index.js" defer></script>
+  <!-- Script here -->
 </body>
 </html>
